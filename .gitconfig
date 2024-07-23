@@ -1,0 +1,2 @@
+[diff "ipynb"]
+    textconv = jq .  # Ensure jq is installed
