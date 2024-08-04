@@ -25,17 +25,17 @@ X = torch.tensor(X)
 Y = torch.tensor(Y)
 
 # Initialize parameters
-C = torch.rand(27, 2)
-W1 = torch.rand(6, 100)
-b1 = torch.rand(100)
-W2 = torch.rand(100, 27)
+C = torch.rand(27, 3)
+W1 = torch.rand(9, 180)
+b1 = torch.rand(180)
+W2 = torch.rand(180, 27)
 b2 = torch.rand(27)
 parameters = [C, W1, b1, W2, b2]
 
 for p in parameters:
     p.requires_grad_()
 
-steps = 50000
+steps = 58000
 lrs = torch.linspace(-3, 0, steps)
 lrs = 10**lrs
 
@@ -45,13 +45,13 @@ for i in range(steps):
     # forward pass
     # shape: (batch_size, block_size, emb_dim) basically 32 samples, each with 3 characters, each character has 2 dimensions
     emb = C[X[ix]]
-    h = torch.tanh(emb.view(-1, 6) @ W1 + b1)
+    h = torch.tanh(emb.view(-1, 9) @ W1 + b1)
     logits = h @ W2 + b2
     loss = F.cross_entropy(logits, Y[ix])
-    print(loss.item())
+    # print(loss.item())
 
     # backward pass
-    learning_rate = 0.1
+    learning_rate = 0.01
     for p in parameters:
         p.grad = None
     loss.backward()
@@ -63,3 +63,28 @@ for i in range(steps):
     # track the loss
     # lri.append(lr)
     # lossi.append(loss.item())
+
+print(loss.item())
+
+
+""" # Plot the 2D embedding
+# visualize dimensions 0 and 1 of the embedding matrix C for all characters
+plt.figure(figsize=(8, 8))
+plt.scatter(C[:, 0].data, C[:, 1].data, s=200)
+for i in range(C.shape[0]):
+    plt.text(C[i, 0].item(), C[i, 1].item(), itos[i],
+             ha="center", va="center", color='white')
+plt.grid('minor')
+
+plt.show()  # Add this line to display the plot
+ """
+
+
+# Plot the embedding in 3D
+fig = plt.figure(figsize=(8, 8))
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(C[:, 0].data, C[:, 1].data, C[:, 2].data, s=200)
+for i in range(C.shape[0]):
+    ax.text(C[i, 0].item(), C[i, 1].item(), C[i, 2].item(), itos[i],
+            ha="center", va="center")
+plt.show()
