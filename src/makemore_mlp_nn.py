@@ -67,6 +67,27 @@ for i in range(steps):
 print(loss.item())
 
 
+# sample from the model
+g = torch.Generator().manual_seed(2147483647 + 10)
+
+for _ in range(20):
+
+    out = []
+    context = [0] * block_size  # initialize with all ...
+    while True:
+        emb = C[torch.tensor([context])]  # (1,block_size,d)
+        h = torch.tanh(emb.view(1, -1) @ W1 + b1)
+        logits = h @ W2 + b2
+        probs = F.softmax(logits, dim=1)
+        ix = torch.multinomial(probs, num_samples=1, generator=g).item()
+        context = context[1:] + [ix]
+        out.append(ix)
+        if ix == 0:
+            break
+
+    print(''.join(itos[i] for i in out))
+
+
 """ # Plot the 2D embedding
 # visualize dimensions 0 and 1 of the embedding matrix C for all characters
 plt.figure(figsize=(8, 8))
