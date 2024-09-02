@@ -3,7 +3,7 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
 # Load and preprocess data
-words = open('../names.txt', 'r').read().splitlines()
+words = open('../data/names.txt', 'r').read().splitlines()
 chars = sorted(list(set(''.join(words))))
 stoi = {ch: i+1 for i, ch in enumerate(chars)}
 stoi['.'] = 0
@@ -13,7 +13,7 @@ itos = {i: ch for ch, i in stoi.items()}
 block_size = 3  # context length: how many characters to look at to predict the next one
 X, Y = [], []
 
-for w in words:  # Using first 5 words for demonstration
+for w in words:  
     context = [stoi['.']] * block_size
     for ch in w + '.':
         xi = stoi[ch]

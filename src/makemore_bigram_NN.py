@@ -4,7 +4,7 @@ import torch.nn.functional as F
 # Initialize the stoi dictionary (character to index mapping)
 # Example word list for testing
 # Ensure the file path is correct
-words = open('../names.txt', 'r').read().splitlines()
+words = open('../data/names.txt', 'r').read().splitlines()
 
 chars = sorted(list(set(''.join(words))))
 stoi = {ch: i + 1 for i, ch in enumerate(chars)}
